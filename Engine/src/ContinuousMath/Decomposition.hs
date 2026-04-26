@@ -6,6 +6,10 @@ import qualified ContinuousMath.Gauss as Gauss
 import qualified ContinuousMath.Potential as Potential
 import qualified ContinuousMath.Stokes as Stokes
 
+-- 1. Gauss
+-- 2. Relaxation
+-- 3. Derive the gradient component from potential differences
+-- 4. Stokes
 decompose :: Dom.ComputationalGraph -> Dom.SimulationResult
 decompose graph@(Dom.ComputationalGraph adjMap) =
     let

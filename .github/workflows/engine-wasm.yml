@@ -68,6 +68,6 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
           prerelease: false
-          title: "WASM Engine Build (Continuous)"
+          title: "WASM Engine Build"
           files: |
             Engine.wasm

@@ -34,18 +34,13 @@ jobs:
     name: Compile Engine to WASM
     runs-on: ubuntu-latest
     needs: test
+    container:
+      image: ghcr.io/ghc-wasm-meta/ghc-9.6-wasm-wasi-ubuntu22.04:latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Setup GHC WASM
-        run: |
-          # Install ghc-wasm-meta
-          curl -L https://gitlab.haskell.org/ghc/ghc-wasm-meta/-/raw/master/install.sh | sh
-          echo "$HOME/.ghc-wasm/bin" >> $GITHUB_PATH
 
       - name: Compile to WASM
         run: |
-          # Use the WASM-enabled GHC
           wasm32-wasi-ghc src/Main.hs \
             -o Engine.wasm \
             -no-hs-main \
@@ -60,4 +55,5 @@ jobs:
         with:
           name: hodge-decomposition-engine
           path: Engine.wasm
+
 

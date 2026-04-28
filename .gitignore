@@ -35,3 +35,4 @@ $RECYCLE.BIN/
 .history/
 
 ghc-wasm-meta/
+test-engine.js

@@ -4,6 +4,14 @@ A high-performance Discrete Vector Calculus engine built in Haskell, designed to
 
 This repository contains the **core mathematical engine** compiled to WebAssembly (WASM), intended to be consumed by external frontend applications.
 
+### Manual Build
+To build the WASM binary locally using the GHC WASM toolchain:
+```bash
+wasm32-wasi-cabal update
+wasm32-wasi-cabal configure --allow-newer --ghc-options="-O2 -no-hs-main -optl-mexec-model=reactor -optl-Wl,--export=malloc -optl-Wl,--export=free -optl-Wl,--export=hs_init -optl-Wl,--export=run_decomposition -optl-Wl,--export=free_haskell_string"
+wasm32-wasi-cabal build exe:Engine
+```
+
 ---
 
 ## What does this engine do?
@@ -36,13 +44,33 @@ The engine communicates using optimized JSON structures via FFI.
 ### Output Sample
 ```json
 {
-  "outgoingSimulationResultNodes": [
-    { "outgoingNodeResultId": 1, "outgoingNodeResultDivergence": 10.5, "outgoingNodeResultPotential": 0.0 }
-  ],
   "outgoingSimulationResultEdges": [
-    { "outgoingEdgeResultId": 1, "outgoingEdgeResultGradient": 8.2, "outgoingEdgeResultRotational": 2.3 }
+    {
+      "outgoingEdgeResultGradient": 10.5,
+      "outgoingEdgeResultId": 1,
+      "outgoingEdgeResultRotational": 0,
+      "outgoingEdgeResultSource": 1,
+      "outgoingEdgeResultTarget": 2
+    }
   ],
-  "outgoingSimulationResultIsConservative": false
+  "outgoingSimulationResultIsConservative": true,
+  "outgoingSimulationResultNodes": [
+    {
+      "outgoingNodeResultDivergence": 10.5,
+      "outgoingNodeResultId": 1,
+      "outgoingNodeResultPotential": 0
+    },
+    {
+      "outgoingNodeResultDivergence": -10.5,
+      "outgoingNodeResultId": 2,
+      "outgoingNodeResultPotential": -10.5
+    },
+    {
+      "outgoingNodeResultDivergence": 0,
+      "outgoingNodeResultId": 3,
+      "outgoingNodeResultPotential": 0
+    }
+  ]
 }
 ```
 

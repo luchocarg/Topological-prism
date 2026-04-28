@@ -34,10 +34,14 @@ jobs:
     name: Compile Engine to WASM
     runs-on: ubuntu-latest
     needs: test
-    container:
-      image: ghcr.io/ghc-wasm-meta/ghc-9.6-wasm-wasi-ubuntu22.04:latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install GHC WASM Toolchain
+        run: |
+          curl -L https://gitlab.haskell.org/ghc/ghc-wasm-meta/-/raw/master/install.sh | bash
+          echo "$HOME/.ghc-wasm/bin" >> $GITHUB_PATH
+
 
       - name: Compile to WASM
         run: |

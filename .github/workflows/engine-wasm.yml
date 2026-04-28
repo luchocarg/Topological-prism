@@ -11,17 +11,18 @@ jobs:
     name: Compile Engine to WASM
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Setup GHC WASM
         uses: tweag/setup-ghc-wasm@v1
         with:
           ghc-version: '9.6'
 
-
       - name: Compile to WASM
         run: |
           wasm32-wasi-ghc src/Main.hs \
+            -O2 \
             -o Engine.wasm \
             -no-hs-main \
             -optl-Wl,--export=run_decomposition \
@@ -35,3 +36,4 @@ jobs:
         with:
           name: hodge-decomposition-engine
           path: Engine.wasm
+          if-no-files-found: error

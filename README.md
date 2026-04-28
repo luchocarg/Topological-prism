@@ -4,14 +4,6 @@ A high-performance Discrete Vector Calculus engine built in Haskell, designed to
 
 This repository contains the **core mathematical engine** compiled to WebAssembly (WASM), intended to be consumed by external frontend applications.
 
-### Manual Build
-To build the WASM binary locally using the GHC WASM toolchain:
-```bash
-wasm32-wasi-cabal update
-wasm32-wasi-cabal configure --allow-newer --ghc-options="-O2 -no-hs-main -optl-mexec-model=reactor -optl-Wl,--export=malloc -optl-Wl,--export=free -optl-Wl,--export=hs_init -optl-Wl,--export=run_decomposition -optl-Wl,--export=free_haskell_string"
-wasm32-wasi-cabal build exe:Engine
-```
-
 ---
 
 ## What does this engine do?

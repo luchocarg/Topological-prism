@@ -2,9 +2,9 @@ name: WASM Engine CI
 
 on:
   push:
-    branches: [ refactor/engine-wasm ]
+    branches: [ main ]
   pull_request:
-    branches: [ refactor/engine-wasm ]
+    branches: [ main ]
 
 jobs:
   test:

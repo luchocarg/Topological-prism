@@ -1,4 +1,4 @@
-name: WASM Engine CI
+name: Build Wasm Engine
 
 on:
   push:
@@ -14,24 +14,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup GHC WASM
-        uses: tweag/setup-ghc-wasm@v1
-        with:
-          ghc-version: '9.6'
-
-      - name: Compile to WASM
+      - name: Setup GHC Wasm Toolchain
         run: |
-          wasm32-wasi-ghc src/Main.hs \
-            -O2 \
-            -o Engine.wasm \
-            -no-hs-main \
-            -optl-Wl,--export=run_decomposition \
-            -optl-Wl,--export=free_haskell_string \
-            -optl-Wl,--export=hs_init \
-            -optl-Wl,--export=malloc \
-            -optl-Wl,--export=free
+          curl -L https://gitlab.haskell.org/ghc/ghc-wasm-meta/-/raw/master/bootstrap.sh | sh
 
-      - name: Upload WASM Package
+      - name: Build to Wasm
+        run: |
+          source ~/.ghc-wasm/env
+          
+          wasm32-wasi-cabal update
+          wasm32-wasi-cabal configure --allow-newer --ghc-options="-O2 -no-hs-main -optl-mexec-model=reactor -optl-Wl,--export=malloc -optl-Wl,--export=free -optl-Wl,--export=run_decomposition -optl-Wl,--export=free_haskell_string"
+          
+          wasm32-wasi-cabal build exe:Engine
+          
+          cp $(find dist-newstyle -name "Engine.wasm" -type f | head -n 1) ./Engine.wasm
+
+      - name: Upload Wasm Artifact
         uses: actions/upload-artifact@v4
         with:
           name: hodge-decomposition-engine

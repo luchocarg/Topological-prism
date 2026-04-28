@@ -1,24 +1,40 @@
 name: Build Wasm Engine
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - '**.hs'
-      - '**.cabal'
-      - 'stack.yaml'
-  pull_request:
-    branches: [ main ]
-    paths:
-      - '**.hs'
-      - '**.cabal'
+  workflow_dispatch:
 
 jobs:
+  test:
+    name: Run Property based Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: haskell-actions/setup@v2
+        with:
+          ghc-version: '9.4'
+          cabal-version: '3.10'
+      
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cabal/store
+          key: ${{ runner.os }}-cabal-${{ hashFiles('package.yaml', '**.cabal') }}
+          restore-keys: |
+            ${{ runner.os }}-cabal-
+
+      - name: Run tests
+        run: |
+          cabal update
+          cabal test
+
   build-wasm:
     name: Compile Engine to WASM
+    needs: test
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -46,7 +62,7 @@ jobs:
           if-no-files-found: error
 
       - name: Deploy Latest Release
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"

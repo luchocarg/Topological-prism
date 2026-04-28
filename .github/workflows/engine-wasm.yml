@@ -3,13 +3,22 @@ name: Build Wasm Engine
 on:
   push:
     branches: [ main ]
+    paths:
+      - '**.hs'
+      - '**.cabal'
+      - 'stack.yaml'
   pull_request:
     branches: [ main ]
+    paths:
+      - '**.hs'
+      - '**.cabal'
 
 jobs:
   build-wasm:
     name: Compile Engine to WASM
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -35,3 +44,14 @@ jobs:
           name: hodge-decomposition-engine
           path: Engine.wasm
           if-no-files-found: error
+
+      - name: Deploy Latest Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "WASM Engine Build (Continuous)"
+          files: |
+            Engine.wasm

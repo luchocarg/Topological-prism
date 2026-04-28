@@ -2,6 +2,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData #-}
 
+-- | Main Entry point for the WASM Engine.
+-- This module exports core mathematical logic via FFI.
 module Main where
 
 import Foreign.C.String (CString, newCString, peekCString)
@@ -13,7 +15,13 @@ import qualified Infrastructure.JsonDto as Dto
 import qualified Infrastructure.Mappers as Mapper
 import qualified ContinuousMath.Decomposition as Logic
 
+-- | Exported function to run the Hodge Decomposition.
+-- Expects a JSON string pointer (IncomingGraphDto).
+-- Returns a JSON string pointer (OutgoingSimulationResultDto).
+-- NOTE: The caller is responsible for freeing the returned CString using free_haskell_string.
 foreign export ccall "run_decomposition" run_decomposition :: CString -> IO CString
+
+-- | Helper to free memory allocated by Haskell's newCString.
 foreign export ccall "free_haskell_string" free_haskell_string :: CString -> IO ()
 
 run_decomposition :: CString -> IO CString
@@ -38,3 +46,4 @@ free_haskell_string = free
 
 main :: IO ()
 main = return ()
+

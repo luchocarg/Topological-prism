@@ -1,5 +1,9 @@
 name: Build Wasm Engine
-on: [push]
+on:
+  push:
+    branches: [ legacy-web ]
+  pull_request:
+    branches: [ legacy-web ]
 
 jobs:
   build-wasm:

@@ -76,5 +76,3 @@ $$id(e_i) = id(e_j) \iff i = j$$
 | **Axiom IV** | `prop_noSelfLoops` | `GeneratorsSpec.hs` |
 | **Axiom IV** | `prop_noMultiEdges` | `GeneratorsSpec.hs` |
 | **Axiom V** | `prop_uniqueEdgeIds` | `GeneratorsSpec.hs` |
-
-Would you like me to generate the English Markdown blocks for the **Physics** and **Topology** modules following this same technical structure?
